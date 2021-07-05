@@ -108,6 +108,24 @@ public class Base {
         return positions;
     }
 
+    public List<User> getUsersList() {
+        ResultSet rs = getResultSet(SQLQueries.getUsersList());
+        List<User> users = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                String user_id = rs.getString("user_id");
+                String user_name = rs.getString("name");
+
+                users.add(new User(user_id, user_name));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return users;
+    }
+
     public List<WarehousePosition> getWarehousePositions() {
         ResultSet rs = getResultSet(SQLQueries.getWarehousePositions());
         List<WarehousePosition> positions = new ArrayList<>();
@@ -159,9 +177,8 @@ public class Base {
     private ResultSet getResultSet(String sql) {
         try {
             Statement statement = this.connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
 
-            return resultSet;
+            return statement.executeQuery(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }

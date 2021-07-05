@@ -1,7 +1,7 @@
 package bot;
 
 import bar.MenuPosition;
-import bar.WarehousePosition;
+import bar.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -26,6 +26,7 @@ public class BotKeyboards {
     public static final String CODE_LIQUOR = "liquor";
     public static final String CODE_ALC_FREE = "free";
     public static final String CODE_MAKE_ORDER = "make_order";
+    public static final String CODE_SOMEONE_ORDER = "someone_order";
     public static final String CODE_ORDER_INFO = "order_info";
     public static final String CODE_ORDER_WH_INFO = "order_wh_info";
     public static final String CODE_ORDER_YES = "order_yes";
@@ -39,7 +40,7 @@ public class BotKeyboards {
     public static InlineKeyboardMarkup getMainMenuKeyb() {
         String[] captions = new String[]{"Меню \uD83D\uDCDC", "Баланс \uD83D\uDCB8", "Моя статистика \uD83D\uDCC8"};
         String[] callbacks = new String[]{CODE_MENU, CODE_BALANCE, CODE_STATS};
-        int[] typeButtons = new int[]{0,0,0};
+        int[] typeButtons = new int[]{0, 0, 0};
 
         return generateKeyboard(captions, callbacks, typeButtons, 3, 1, null);
     }
@@ -60,9 +61,9 @@ public class BotKeyboards {
         return generateKeyboard(captions, callbacks, typeButtons, 2, 1, null);
     }
 
-    public static InlineKeyboardMarkup getOrderKeyb(long userId, String orserName) {
+    public static InlineKeyboardMarkup getOrderKeyb(long userId, String userName) {
         String[] captions = new String[]{"Выполнить", "Отклонить"};
-        String[] callbacks = new String[]{CODE_ORDER_YES + "|" + userId + ">" + orserName, CODE_ORDER_NO + "|" + userId};
+        String[] callbacks = new String[]{CODE_ORDER_YES + "|" + userId + ">" + userName, CODE_ORDER_NO + "|" + userId};
         int[] typeButtons = new int[]{0, 0};
 
         return generateKeyboard(captions, callbacks, typeButtons, 2, 1, null);
@@ -120,27 +121,72 @@ public class BotKeyboards {
     public static InlineKeyboardMarkup getMenuKeyb() {
         String[] captions = new String[]{"Коктейли", "Виски", "Вино", "Пиво", "Ликер", "б/а напитки"};
         String[] callbacks = new String[]{CODE_COCKTAIL, CODE_WHISKY, CODE_WINE, CODE_BEER, CODE_LIQUOR, CODE_ALC_FREE};
-        int[] typeButtons = new int[]{0,0,0,0,0,0};
+        int[] typeButtons = new int[]{0, 0, 0, 0, 0, 0};
 
         return generateKeyboard(captions, callbacks, typeButtons, 3, 2, null);
     }
 
-    public static InlineKeyboardMarkup getOrderInfoKeyb(String name) {
-        String[] captions = new String[]{"Заказать"};
-        String[] callbacks = new String[]{CODE_MAKE_ORDER + "|" + name};
-        int[] typeButtons = new int[]{0};
+    public static InlineKeyboardMarkup getOrderInfoKeyb(String name, boolean isAdmin) {
+        String[] captions;
+        String[] callbacks;
+        int[] typeButtons;
+        int rowCount;
 
-        return generateKeyboard(captions, callbacks, typeButtons, 1, 1, CODE_DEL_MES);
+        if (isAdmin) {
+            captions = new String[]{"Заказать", "Заказать за другого"};
+            callbacks = new String[]{CODE_MAKE_ORDER + "|" + name, CODE_SOMEONE_ORDER + "|" + name};
+            typeButtons = new int[]{0, 0};
+            rowCount = 2;
+        } else {
+            captions = new String[]{"Заказать"};
+            callbacks = new String[]{CODE_MAKE_ORDER + "|" + name};
+            typeButtons = new int[]{0};
+            rowCount = 1;
+        }
+
+        return generateKeyboard(captions, callbacks, typeButtons, rowCount, 1, CODE_DEL_MES);
     }
 
-    public static InlineKeyboardMarkup getPayKeyb() { String[] captions = new String[]{"Пополнить (Ю.Money)", "Пополнить (Tinkoff)"};
+    public static InlineKeyboardMarkup getPayKeyb() {
+        String[] captions = new String[]{"Пополнить (Ю.Money)", "Пополнить (Tinkoff)"};
         String[] callbacks = new String[]{Config.PAY_URL, Config.PAY_URL_2};
         int[] typeButtons = new int[]{1, 1};
 
         return generateKeyboard(captions, callbacks, typeButtons, 2, 1, null);
     }
 
-    public static InlineKeyboardMarkup getBackButtonKeyb(String backCode) { String[] captions = new String[]{"Назад"};
+
+    public static InlineKeyboardMarkup getUsersListKeyb(String order) {
+        List<User> users = Main.base.getUsersList();
+
+        int size = users.size();
+
+        String[] captions = new String[size];
+        String[] callbacks = new String[size];
+        int[] typeButtons = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            User user = users.get(i);
+            captions[i] = user.getName();
+            callbacks[i] = CODE_ORDER_YES + "|" + user.getId() + ">" + order;
+            typeButtons[i] = 0;
+        }
+
+        int rowCount = size;
+        int elementInRowCount = 1;
+
+        if (size > 8) {
+            elementInRowCount = 2;
+            rowCount = rowCount / 2;
+            if (rowCount * elementInRowCount < size)
+                rowCount++;
+        }
+
+        return generateKeyboard(captions, callbacks, typeButtons, rowCount, elementInRowCount, CODE_MENU);
+    }
+
+    public static InlineKeyboardMarkup getBackButtonKeyb(String backCode) {
+        String[] captions = new String[]{"Назад"};
         String[] callbacks = new String[]{backCode};
         int[] typeButtons = new int[]{0};
 

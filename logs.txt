@@ -365,3 +365,67 @@
 05.07.21 10:25:36 sfall3003 (129474100): Меню 📜
 05.07.21 10:25:40 sfall3003 (129474100): Баланс 💸
 05.07.21 10:25:46 sfall3003 (129474100): Статистика 📈
+05.07.21 19:41:40 sfall3003 (129474100): wine
+05.07.21 19:41:45 sfall3003 (129474100): get_menu
+05.07.21 19:41:47 sfall3003 (129474100): free
+05.07.21 19:41:48 sfall3003 (129474100): order_info|sprite
+05.07.21 19:41:53 sfall3003 (129474100): delete_message
+05.07.21 19:41:55 sfall3003 (129474100): order_info|juice_tomat
+05.07.21 19:41:58 sfall3003 (129474100): delete_message
+05.07.21 19:42:00 sfall3003 (129474100): order_info|free_cola
+05.07.21 19:42:03 sfall3003 (129474100): delete_message
+05.07.21 21:12:05 sfall3003 (129474100): /start
+05.07.21 21:14:05 sfall3003 (129474100): /start
+05.07.21 21:15:47 sfall3003 (129474100): /start
+05.07.21 21:17:13 sfall3003 (129474100): Меню 📜
+05.07.21 21:17:16 sfall3003 (129474100): cocktail
+05.07.21 21:18:23 sfall3003 (129474100): 📝
+05.07.21 21:18:59 sfall3003 (129474100): cocktail
+05.07.21 21:21:03 sfall3003 (129474100): order_info|screwdriver
+05.07.21 21:22:08 sfall3003 (129474100): make_order|screwdriver
+05.07.21 21:37:26 btCrtd (318257258): Меню
+05.07.21 21:37:35 btCrtd (318257258): /start
+05.07.21 21:37:37 btCrtd (318257258): Меню 📜
+05.07.21 21:37:40 btCrtd (318257258): cocktail
+05.07.21 21:37:42 btCrtd (318257258): order_info|tequila_sunrise
+05.07.21 21:38:02 sfall3003 (129474100): Меню 📜
+05.07.21 21:38:08 sfall3003 (129474100): cocktail
+05.07.21 21:38:11 sfall3003 (129474100): order_info|tequila_sunrise
+05.07.21 21:39:21 sfall3003 (129474100): Меню 📜
+05.07.21 21:39:26 sfall3003 (129474100): cocktail
+05.07.21 21:39:29 sfall3003 (129474100): order_info|tequila_sunrise
+05.07.21 21:42:25 sfall3003 (129474100): Меню 📜
+05.07.21 21:42:28 sfall3003 (129474100): cocktail
+05.07.21 21:42:33 sfall3003 (129474100): order_info|margarita
+05.07.21 21:42:40 sfall3003 (129474100): someone_order|margarita
+05.07.21 21:43:03 btCrtd (318257258): make_order|tequila_sunrise
+05.07.21 21:45:45 sfall3003 (129474100): order_yes|318257258>tequila_sunrise
+05.07.21 21:46:09 btCrtd (318257258): order_info|whisky_cola
+05.07.21 21:46:13 btCrtd (318257258): make_order|whisky_cola
+05.07.21 21:46:17 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:05:34 sfall3003 (129474100): Меню 📜
+05.07.21 22:05:41 sfall3003 (129474100): cocktail
+05.07.21 22:05:43 sfall3003 (129474100): order_info|whisky_cola
+05.07.21 22:05:46 sfall3003 (129474100): someone_order|whisky_cola
+05.07.21 22:05:54 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:08:44 sfall3003 (129474100): someone_order|whisky_cola
+05.07.21 22:08:47 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:09:21 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:09:30 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:09:43 btCrtd (318257258): make_order|whisky_cola
+05.07.21 22:09:46 sfall3003 (129474100): order_yes|318257258>whisky_cola
+05.07.21 22:10:18 sfall3003 (129474100): get_menu
+05.07.21 22:10:23 sfall3003 (129474100): whisky
+05.07.21 22:10:24 sfall3003 (129474100): order_info|whisky_jd
+05.07.21 22:10:29 sfall3003 (129474100): someone_order|whisky_jd
+05.07.21 22:10:30 sfall3003 (129474100): order_yes|129474100>whisky_jd
+05.07.21 22:10:37 sfall3003 (129474100): delete_message
+05.07.21 22:10:39 sfall3003 (129474100): get_menu
+05.07.21 22:10:42 sfall3003 (129474100): whisky
+05.07.21 22:10:44 sfall3003 (129474100): get_menu
+05.07.21 22:10:47 sfall3003 (129474100): liquor
+05.07.21 22:10:49 sfall3003 (129474100): get_menu
+05.07.21 22:10:50 sfall3003 (129474100): cocktail
+05.07.21 22:10:52 sfall3003 (129474100): order_info|martini_dry
+05.07.21 22:10:55 sfall3003 (129474100): someone_order|martini_dry
+05.07.21 22:10:57 sfall3003 (129474100): order_yes|318257258>martini_dry

@@ -12,7 +12,5 @@ public class Main {
 
         Bot.start();
 
-        //todo Добавить кнопки в бота
-        //todo команды для админа
     }
 }

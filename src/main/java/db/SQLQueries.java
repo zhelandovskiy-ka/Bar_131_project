@@ -24,6 +24,10 @@ public class SQLQueries {
             return "SELECT * FROM menu;";
     }
 
+    public static String getUsersList() {
+            return "SELECT user_id, name FROM users;";
+    }
+
     public static String updateUserData(User user) {
         return String.format("UPDATE users SET balance=%s, count_orders=%s, total_drunk=%s, total_lost=%s WHERE user_id=%s;", user.getBalance(), user.getCountOrders(), user.getTotalDrunk(), user.getTotalLost(), user.getId());
     }

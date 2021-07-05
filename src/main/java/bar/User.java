@@ -9,6 +9,11 @@ public class User {
     private double totalLost;
     private int countOrders;
 
+    public User(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public User(String id, String name, double balance, double totalPayed, double totalDrunk, double totalLost, int countOrders) {
         this.id = id;
         this.name = name;

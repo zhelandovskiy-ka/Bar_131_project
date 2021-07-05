@@ -1,23 +1,22 @@
 package bot;
 
-import org.telegram.telegrambots.meta.api.methods.ParseMode;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import units.Config;
-import units.Logs;
-import units.Main;
-
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import units.Config;
+import units.Logs;
+import units.Main;
 import units.Utilits;
 
 import java.io.File;
@@ -73,16 +72,10 @@ public class Bot extends TelegramLongPollingBot {
                     sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom());
                     sendMes(id, getRandomSmile());
                 } else
-                    sendMesWithKeyb(id, "Приветствую, "
-                                    + message.getChat().getFirstName()
-                                    + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
+                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
                             , BotKeyboards.getAccessesKeyb(), false);
-
-                if (id == Config.BOT_ID_MY) {
-//                    sendMesWithKeyb(id, "------------Меню администратора------------", getAdminMenu());
-//                    sendMRM(BOT_ID_MY, "Запрос подписок", getKeyboardBottom());
-                }
             }
+
 
             if (text.equals("/menu") || text.equals("Меню \uD83D\uDCDC")) {
                 CallbackResponses.getMenuList(message, false);
@@ -148,12 +141,14 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             if (queryData.contains(BotKeyboards.CODE_ORDER_INFO)) {
-                CallbackResponses.getMenuOrderInfo(query);
+                boolean isAdmin = query.getMessage().getChatId() == Config.BOT_ID_MY;
+
+                CallbackResponses.getMenuOrderInfo(query, isAdmin);
             }
 
-            if (queryData.contains(BotKeyboards.CODE_ORDER_WH_INFO)) {
-                CallbackResponses.getOrderInfo(query);
-            }
+//            if (queryData.contains(BotKeyboards.CODE_ORDER_WH_INFO)) {
+//                CallbackResponses.getOrderInfo(query);
+//            }
 
             if (queryData.equals(BotKeyboards.CODE_DEL_MES)) {
                 CallbackResponses.deleteMessage(query);
@@ -161,6 +156,10 @@ public class Bot extends TelegramLongPollingBot {
 
             if (queryData.contains(BotKeyboards.CODE_MAKE_ORDER)) {
                 CallbackResponses.makeOrder(query);
+            }
+
+            if (queryData.contains(BotKeyboards.CODE_SOMEONE_ORDER)) {
+                CallbackResponses.makeSomeoneOrder(query);
             }
 
             if (queryData.contains(BotKeyboards.CODE_ORDER_YES)) {
@@ -179,6 +178,7 @@ public class Bot extends TelegramLongPollingBot {
                 CallbackResponses.getStats(query);
             }*/
         }
+
     }
 
     public void sendMesWithKeyb(long id, String text, InlineKeyboardMarkup ikm, boolean md) {
@@ -239,8 +239,9 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sm = new SendMessage()
                 .setChatId(id)
                 .setText(text)
-                .setParseMode(ParseMode.MARKDOWN)
                 .disableWebPagePreview();
+//        if (md)
+//            sm.setParseMode(ParseMode.MARKDOWN);
         try {
             message = execute(sm);
 //                System.out.println(message.getMessageId());
@@ -320,7 +321,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String getRandomSmile() {
-        String[] smiles = new String[]{"🙋🏿‍♂️","🙋🏿","🙋","🙋‍♂️","🙋🏾‍♂️","🙋🏼‍♂️","🙋‍♀️","🙋🏿‍♀️","🙋🏾‍♀️","🙋🏻‍♀️","🙋🏼‍♀️","💩","🤡","🙉","🌝","😎","🤘","🤘🏿","✌️","✌🏿","🤙","🤙🏿"};
+        String[] smiles = new String[]{"🙋🏿‍♂️", "🙋🏿", "🙋", "🙋‍♂️", "🙋🏾‍♂️", "🙋🏼‍♂️", "🙋‍♀️", "🙋🏿‍♀️", "🙋🏾‍♀️", "🙋🏻‍♀️", "🙋🏼‍♀️", "💩", "🤡", "🙉", "🌝", "😎", "🤘", "🤘🏿", "✌️", "✌🏿", "🤙", "🤙🏿"};
 
         return smiles[Utilits.getRandom(smiles.length - 1)];
     }

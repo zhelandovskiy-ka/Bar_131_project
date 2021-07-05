@@ -2,7 +2,6 @@ package bot;
 
 import bar.MenuPosition;
 import bar.User;
-import bar.WarehousePosition;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import units.Config;
@@ -73,7 +72,7 @@ public class CallbackResponses {
     }
 
     //get order info from menu
-    public static void getMenuOrderInfo(CallbackQuery query) {
+    public static void getMenuOrderInfo(CallbackQuery query, boolean isAdmin) {
         String[] commands = getCommandsFromQuery(query.getData());
         String orderName = commands[0];
         long id = query.getMessage().getChatId();
@@ -88,10 +87,10 @@ public class CallbackResponses {
                         + Utilits.makeItalic(menuPosition.getDescription())
                         + "\n\n"
                         + "Цена: " + menuPosition.getCost() + "\u20BD"
-                , menuPosition.getPicSrc(), BotKeyboards.getOrderInfoKeyb(orderName));
+                , menuPosition.getPicSrc(), BotKeyboards.getOrderInfoKeyb(orderName, isAdmin));
     }
 
-    //get order info
+/*    //get order info
     public static void getOrderInfo(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
         String orderName = commands[0];
@@ -106,7 +105,7 @@ public class CallbackResponses {
                         + "\n\n"
                         + "Цена: " + warehousePosition.getCost() + "\u20BD"
                 , BotKeyboards.getOrderInfoKeyb(orderName), true);
-    }
+    }*/
 
     //delete last message
     public static void deleteMessage(CallbackQuery query) {
@@ -143,6 +142,17 @@ public class CallbackResponses {
         Bot.getBotInstance().sendMes(id, "Ща всё будет, ожидайте ⏳");
     }
 
+    //make order for other user
+    public static void makeSomeoneOrder(CallbackQuery query) {
+
+        String[] commands = getCommandsFromQuery(query.getData());
+        String orderName = commands[0];
+
+
+        Bot.getBotInstance().sendMesWithKeyb(Config.BOT_ID_MY, "Выбери пользователя"
+                , BotKeyboards.getUsersListKeyb(orderName), false);
+    }
+
     //accept order
     public static void acceptOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
@@ -150,7 +160,7 @@ public class CallbackResponses {
         Main.base.updateUserData(commands);
         Main.base.addToHistory(commands);
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ выполнен ✅");
+        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ " + commands[1] + " выполнен ✅");
     }
 
     //cancel order
