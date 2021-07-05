@@ -429,3 +429,31 @@
 05.07.21 22:10:52 sfall3003 (129474100): order_info|martini_dry
 05.07.21 22:10:55 sfall3003 (129474100): someone_order|martini_dry
 05.07.21 22:10:57 sfall3003 (129474100): order_yes|318257258>martini_dry
+05.07.21 22:18:26 sfall3003 (129474100): Меню 📜
+05.07.21 22:18:34 sfall3003 (129474100): whisky
+05.07.21 22:18:38 sfall3003 (129474100): order_info|whisky_bells_spiced
+05.07.21 22:19:07 sfall3003 (129474100): someone_order|whisky_bells_spiced
+05.07.21 22:19:11 sfall3003 (129474100): get_menu
+05.07.21 22:19:15 sfall3003 (129474100): beer
+05.07.21 22:19:17 sfall3003 (129474100): order_info|beer_shpaten
+05.07.21 22:19:34 sfall3003 (129474100): delete_message
+05.07.21 22:19:35 sfall3003 (129474100): get_menu
+05.07.21 22:19:37 sfall3003 (129474100): cocktail
+05.07.21 22:19:43 sfall3003 (129474100): order_info|margarita
+05.07.21 22:19:49 sfall3003 (129474100): delete_message
+05.07.21 22:19:52 sfall3003 (129474100): order_info|bloody_mary
+05.07.21 22:20:00 sfall3003 (129474100): delete_message
+05.07.21 22:20:10 sfall3003 (129474100): order_info|mojito
+05.07.21 22:26:09 btCrtd (318257258): /start
+05.07.21 22:26:25 btCrtd (318257258): Баланс 💸
+05.07.21 22:26:59 btCrtd (318257258): Статистика 📈
+05.07.21 22:27:09 btCrtd (318257258): Меню 📜
+05.07.21 22:27:12 btCrtd (318257258): cocktail
+05.07.21 22:27:14 btCrtd (318257258): order_info|pina_coladaq
+05.07.21 22:27:17 btCrtd (318257258): delete_message
+05.07.21 22:27:20 btCrtd (318257258): get_menu
+05.07.21 22:29:49 btCrtd (318257258): Статистика 📈
+05.07.21 22:30:14 btCrtd (318257258): whisky
+05.07.21 22:30:16 btCrtd (318257258): order_info|whisky_jb
+05.07.21 22:30:45 btCrtd (318257258): delete_message
+05.07.21 22:30:47 btCrtd (318257258): Баланс 💸

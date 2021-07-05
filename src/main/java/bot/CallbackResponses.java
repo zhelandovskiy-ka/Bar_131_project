@@ -16,7 +16,7 @@ public class CallbackResponses {
         String userName = queryMessage.getChat().getUserName();
 
         if (Main.base.checkUsersRegistration(id))
-            Bot.getBotInstance().sendMes(id, "У тебя уже есть доступ, не балуйся.");
+            Bot.getBotInstance().sendMes(id, "У тебя уже есть доступ, не балуйся.", false);
         else
             Bot.getBotInstance().sendMesWithKeyb(Config.BOT_ID_MY, "Пользователь " + name + " @" + userName + " (" + id + ") запросил доступ"
                     , BotKeyboards.getAccessesButKeyb(id, userName), false);
@@ -38,7 +38,7 @@ public class CallbackResponses {
         String[] commands = getCommandsFromQuery(queryData);
         String uId = commands[0];
 
-        Bot.getBotInstance().sendMes(Long.parseLong(uId), "Доступ запрещен");
+        Bot.getBotInstance().sendMes(Long.parseLong(uId), "Доступ запрещен", false);
     }
 
     //get menu
@@ -139,7 +139,7 @@ public class CallbackResponses {
                         + menuPosition.getCost() + "\u20BD"
                 , BotKeyboards.getOrderKeyb(id, orderName), false);
 
-        Bot.getBotInstance().sendMes(id, "Ща всё будет, ожидайте ⏳");
+        Bot.getBotInstance().sendMes(id, "Ща всё будет, ожидайте ⏳", false);
     }
 
     //make order for other user
@@ -160,14 +160,14 @@ public class CallbackResponses {
         Main.base.updateUserData(commands);
         Main.base.addToHistory(commands);
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ " + commands[1] + " выполнен ✅");
+        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ " + commands[1] + " выполнен ✅", false);
     }
 
     //cancel order
     public static void cancelOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ отменен ❌");
+        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ отменен ❌", false);
     }
 
     //get user balance
@@ -196,7 +196,7 @@ public class CallbackResponses {
                         + "\nВсего потрачено: " + Utilits.makeBold(String.valueOf(user.getTotalLost()))
                         + "\nВсего выплачено: " + Utilits.makeBold(String.valueOf(user.getTotalPayed()))
 //                , BotKeyboards.getBackButtonKeyb(BotKeyboards.CODE_MAIN_MENU)
-        );
+                , true);
     }
 
     //splitting the request into commands.

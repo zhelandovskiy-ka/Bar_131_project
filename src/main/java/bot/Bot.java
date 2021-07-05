@@ -70,7 +70,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (Main.base.checkUsersRegistration(message.getChat().getId())) {
 //                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getMainMenuKeyb(), false);
                     sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom());
-                    sendMes(id, getRandomSmile());
+                    sendMes(id, getRandomSmile(), false);
                 } else
                     sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
                             , BotKeyboards.getAccessesKeyb(), false);
@@ -233,15 +233,15 @@ public class Bot extends TelegramLongPollingBot {
         delay();
     }
 
-    public int sendMes(long id, String text) {
+    public int sendMes(long id, String text, boolean md) {
         Message message = new Message();
 
         SendMessage sm = new SendMessage()
                 .setChatId(id)
                 .setText(text)
                 .disableWebPagePreview();
-//        if (md)
-//            sm.setParseMode(ParseMode.MARKDOWN);
+        if (md)
+            sm.setParseMode(ParseMode.MARKDOWN);
         try {
             message = execute(sm);
 //                System.out.println(message.getMessageId());
