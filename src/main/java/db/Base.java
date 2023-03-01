@@ -1,9 +1,7 @@
 package db;
 
-import bar.Component;
-import bar.MenuPosition;
-import bar.User;
-import bar.WarehousePosition;
+import bar.Types;
+import bar.*;
 import units.Json;
 import units.Main;
 
@@ -44,6 +42,10 @@ public class Base {
         updateSQL(SQLQueries.addNewUser(id, userName));
     }
 
+    public void addMenuPosition(String sql) {
+        updateSQL(sql);
+    }
+
     public User getUserData(String userId) {
         ResultSet rs = getResultSet(SQLQueries.getUserData(userId));
         try {
@@ -64,7 +66,26 @@ public class Base {
         return null;
     }
 
+    public User getWarehouseData(String name) {
+        ResultSet rs = getResultSet(SQLQueries.getWarehousePositionByName(name));
+
+
+        return null;
+    }
+
     public void updateUserData(String[] commands) {
+        User user = getUserData(commands[0]);
+        MenuPosition mp = Main.bar.getMenuPositionByName(commands[1]);
+
+        user.setBalance(user.getBalance() - Double.parseDouble(mp.getCost()));
+        user.setCountOrders(user.getCountOrders() + 1);
+        user.setTotalDrunk(user.getTotalDrunk() + mp.getValue());
+        user.setTotalLost(user.getTotalLost() + Double.parseDouble(mp.getCost()));
+
+        updateSQL(SQLQueries.updateUserData(user));
+    }
+
+    public void updateWarehouseData(String[] commands) {
         User user = getUserData(commands[0]);
         MenuPosition mp = Main.bar.getMenuPositionByName(commands[1]);
 
@@ -99,13 +120,27 @@ public class Base {
                 List<Component> components = Json.getComponentsFromJson(rs.getString("components"));
 //                double cost = rs.getDouble("cost");
 
-                positions.add(new MenuPosition(name, label, type, picSrc, recipe, composition, components, description));
+                positions.add(new MenuPosition(name, label, type, Types.getRuTypes(type), picSrc, recipe, composition, components, description));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
         return positions;
+    }
+
+    public String getLabelByName(String name) {
+        ResultSet rs = getResultSet(SQLQueries.getLabelByName(name));
+        String label = "null";
+        try {
+            while (rs.next()) {
+                label = rs.getString("label");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return label;
     }
 
     public List<User> getUsersList() {
@@ -124,6 +159,14 @@ public class Base {
         }
 
         return users;
+    }
+
+    public String getUserNameById(String id) {
+        for (User user : getUsersList()) {
+            if (user.getId().equals(id))
+                return user.getName();
+        }
+        return "%NONAME%";
     }
 
     public List<WarehousePosition> getWarehousePositions() {

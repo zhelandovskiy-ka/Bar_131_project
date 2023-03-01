@@ -7,32 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Test {
-
-    public static InlineKeyboardMarkup getPayKeyb() {
-
-        String[] captions = new String[]{"Пополнить", "Вывести", "Pay", "Out", "Back", "Back"};
-        String[] callbacks = new String[]{Config.PAY_URL, Config.PAY_URL, Config.PAY_URL, Config.PAY_URL, Config.PAY_URL, Config.PAY_URL};
-        int[] typeButtons = new int[]{0,0,0,0,0,1};
-
-        return generateKeyboard(captions, callbacks, 1, 6, typeButtons);
-
-/*        InlineKeyboardButton ikb1 = new InlineKeyboardButton("Пополнить").setUrl(Config.PAY_URL);
-        InlineKeyboardButton ikb2 = new InlineKeyboardButton("Вывести").setUrl(Config.PAY_URL);
-
-        List<InlineKeyboardButton> row1 = new ArrayList<>();
-        row1.add(ikb1);
-        row1.add(ikb2);
-
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
-        row1.add(ikb1);
-        row1.add(ikb2);
-
-        List<List<InlineKeyboardButton>> listRows = new ArrayList<>();
-        listRows.add(row1);
-
-        InlineKeyboardMarkup ikm = new InlineKeyboardMarkup();
-        ikm.setKeyboard(listRows);*/
+    public static void main(String[] args) {
+        int i = 9;
+        double d = (double) i / 2;
+        System.out.println(d);
     }
+
 
     public static InlineKeyboardMarkup generateKeyboard(String[] captions, String[] callbacks, int rowCount, int elementInRowCount, int[] typeButton) {
         int currentRow = 0;

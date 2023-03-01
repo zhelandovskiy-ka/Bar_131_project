@@ -2,6 +2,7 @@ package bot;
 
 import bar.MenuPosition;
 import bar.User;
+import db.Base;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import units.Config;
@@ -51,6 +52,7 @@ public class CallbackResponses {
             Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, "Выберите раздел \uD83E\uDD14", BotKeyboards.getMenuKeyb());
         else
             Bot.getBotInstance().sendMesWithKeyb(id, "Выберите раздел \uD83E\uDD14", BotKeyboards.getMenuKeyb(), true);
+
     }
 
     //get available wines menu for user
@@ -157,17 +159,26 @@ public class CallbackResponses {
     public static void acceptOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
 
+        String label = Base.getInstance("bar.db").getLabelByName(commands[1]);
+        System.out.println("label is " + label);
+
         Main.base.updateUserData(commands);
         Main.base.addToHistory(commands);
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ " + commands[1] + " выполнен ✅", false);
+        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ \"" + label + "\" выполнен ✅", false);
+        Bot.getBotInstance().sendMes(Config.BOT_ID_MY, "Заказ \"" + label + "\" выполнен для @" + Main.base.getUserNameById(commands[0]), false);
+
+        deleteMessage(query);
     }
 
     //cancel order
     public static void cancelOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ отменен ❌", false);
+        String label = Base.getInstance("bar.db").getLabelByName(commands[1]);
+        System.out.println("label is " + label);
+
+        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ \"" + label + "\" отменен ❌", false);
     }
 
     //get user balance
@@ -203,6 +214,8 @@ public class CallbackResponses {
     //template: query|command_1>command_2<command_3
     public static String[] getCommandsFromQuery(String queryData) {
         String[] commands = new String[5];
+
+        System.out.println(queryData);
 
         int pos1 = queryData.indexOf("|");
         int pos2 = queryData.indexOf(">");

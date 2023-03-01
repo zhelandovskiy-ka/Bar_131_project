@@ -21,11 +21,11 @@ public class Bar {
 
                 for (Component component : menuPosition.getComponentList()) {
                     for (WarehousePosition warehousePosition : warehousePositions) {
-//                        if (warehousePosition.getName().contains(component.getName())
-//                                && warehousePosition.getValue() >= component.getValue()) {
+                        if (warehousePosition.getName().contains(component.getName())
+                                && (warehousePosition.getValue() * warehousePosition.getCount()) >= component.getValue()) {
                             countInStock++;
                             break;
-//                        }
+                        }
                     }
                 }
 
@@ -35,6 +35,38 @@ public class Bar {
         }
 
         return menuPositions;
+    }
+
+    public List<MenuPosition> getAvailableMenuPositions() {
+        refreshWarehousePosition();
+        refreshMenuPositions();
+
+        List<MenuPosition> menuPositions = new ArrayList<>();
+
+        for (MenuPosition menuPosition : this.menuPositions) {
+            int countInStock = 0;
+
+            for (Component component : menuPosition.getComponentList()) {
+                for (WarehousePosition warehousePosition : warehousePositions) {
+                    if (warehousePosition.getName().contains(component.getName())
+                            && (warehousePosition.getValue() * warehousePosition.getCount()) >= component.getValue()) {
+                        countInStock++;
+                        break;
+                    }
+                }
+            }
+
+            if (countInStock == menuPosition.getComponentList().size())
+                menuPositions.add(menuPosition);
+        }
+
+        return menuPositions;
+    }
+
+    public List<MenuPosition> getMenuPositions() {
+        refreshMenuPositions();
+
+        return this.menuPositions;
     }
 
     public List<WarehousePosition> getAvailableWarehousePositions(String name) {

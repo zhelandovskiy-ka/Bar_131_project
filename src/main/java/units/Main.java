@@ -9,8 +9,6 @@ public class Main {
     public static Bar bar = new Bar();
 
     public static void main(String[] args) {
-
         Bot.start();
-
     }
 }

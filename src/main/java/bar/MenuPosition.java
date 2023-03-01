@@ -10,6 +10,7 @@ public class MenuPosition {
     private String name;
     private String label;
     private String type;
+    private String ruType;
     private String picSrc;
     private String recipe;
     private String composition;
@@ -17,10 +18,11 @@ public class MenuPosition {
     private List<Component> componentList;
     private double cost;
 
-    public MenuPosition(String name, String label, String type, String picSrc, String recipe, String composition, List<Component> componentList, String description) {
+    public MenuPosition(String name, String label, String type, String ruType, String picSrc, String recipe, String composition, List<Component> componentList, String description) {
         this.name = name;
         this.label = label;
         this.type = type;
+        this.ruType = ruType;
         this.picSrc = picSrc;
         this.recipe = recipe;
         this.composition = composition;
@@ -138,5 +140,9 @@ public class MenuPosition {
 
     public void setComposition(String composition) {
         this.composition = composition;
+    }
+
+    public String getRuType() {
+        return ruType;
     }
 }

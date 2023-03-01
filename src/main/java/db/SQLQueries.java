@@ -20,6 +20,10 @@ public class SQLQueries {
             return "SELECT * FROM warehouse;";
     }
 
+    public static String getWarehousePositionByName(String name) {
+            return "SELECT * FROM warehouse WHERE name='" + name + "';";
+    }
+
     public static String getMenuPositions() {
             return "SELECT * FROM menu;";
     }
@@ -38,5 +42,9 @@ public class SQLQueries {
 
     public static String getUserData(String userId) {
         return "SELECT * FROM users WHERE user_id LIKE '" + userId + "';";
+    }
+
+    public static String getLabelByName(String name) {
+        return "SELECT label FROM menu WHERE name LIKE '" + name + "';";
     }
 }

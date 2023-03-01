@@ -66,28 +66,30 @@ public class Bot extends TelegramLongPollingBot {
             long id = message.getChatId();
             Logs.writeLog(printUserMessage(message));
 
-            if (text.equals("/start")) {
-                if (Main.base.checkUsersRegistration(message.getChat().getId())) {
+            boolean registrationOk = Main.base.checkUsersRegistration(message.getChat().getId());
+
+
+            if (registrationOk) {
+                if (text.equals("/start")) {
 //                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getMainMenuKeyb(), false);
                     sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom());
                     sendMes(id, getRandomSmile(), false);
-                } else
-                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
-                            , BotKeyboards.getAccessesKeyb(), false);
-            }
+                }
 
+                if (text.equals("/menu") || text.equals("Меню \uD83D\uDCDC")) {
+                    CallbackResponses.getMenuList(message, false);
+                }
 
-            if (text.equals("/menu") || text.equals("Меню \uD83D\uDCDC")) {
-                CallbackResponses.getMenuList(message, false);
-            }
+                if (text.equals("/balance") || text.equals("Баланс \uD83D\uDCB8")) {
+                    CallbackResponses.getBalance(message);
+                }
 
-            if (text.equals("/balance") || text.equals("Баланс \uD83D\uDCB8")) {
-                CallbackResponses.getBalance(message);
-            }
-
-            if (text.equals("/stats") || text.equals("Статистика \uD83D\uDCC8")) {
-                CallbackResponses.getStats(message);
-            }
+                if (text.equals("/stats") || text.equals("Статистика \uD83D\uDCC8")) {
+                    CallbackResponses.getStats(message);
+                }
+            } else
+                sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
+                        , BotKeyboards.getAccessesKeyb(), false);
         }
 
         if (update.hasCallbackQuery()) {
@@ -138,6 +140,30 @@ public class Bot extends TelegramLongPollingBot {
 
             if (queryData.equals(BotKeyboards.CODE_ALC_FREE)) {
                 CallbackResponses.getMenuByItemList(query, "Безалкогольное \uD83E\uDDC3");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_VODKA)) {
+                CallbackResponses.getMenuByItemList(query, "Водка");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_WERMUT)) {
+                CallbackResponses.getMenuByItemList(query, "Вермут");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_BALM)) {
+                CallbackResponses.getMenuByItemList(query, "Бальзам");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_GIN)) {
+                CallbackResponses.getMenuByItemList(query, "Джин");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_GIN)) {
+                CallbackResponses.getMenuByItemList(query, "Джин");
+            }
+
+            if (queryData.equals(BotKeyboards.CODE_RUM)) {
+                CallbackResponses.getMenuByItemList(query, "Ром");
             }
 
             if (queryData.contains(BotKeyboards.CODE_ORDER_INFO)) {
@@ -211,7 +237,7 @@ public class Bot extends TelegramLongPollingBot {
 
         delay();
     }
-
+//[{"name":"whisky_jb","value":30},{"name":"liquor_jager","value":30},{"name":"liquor_aperol","value":30},{"name":"juice_lemon","value":30}]
     public void sendPhotoWithKeyb(long id, String text, String photoUrl, InlineKeyboardMarkup ikm) {
 //        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         ///Users/cryteur_dev/Yandex.Disk.localized/java_project/Bar_131_project/pics/whiskey-cola.jpeg
@@ -227,7 +253,18 @@ public class Bot extends TelegramLongPollingBot {
             execute(photo);
 
         } catch (TelegramApiException e) {
+            String message = e.getMessage();
+            System.out.println(message);
             e.printStackTrace();
+            if (message.contains("Unable to send photo")) {
+                photo.setPhoto(new File("pics\\error.png"));
+                try {
+                    execute(photo);
+                } catch (TelegramApiException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
         }
 
         delay();
@@ -301,7 +338,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String printUserMessage(Message message) {
-        return message.getChat().getUserName() + " (" + message.getChat().getId() + "): " + message.getText();
+        return message.getChat().getFirstName() + " " + message.getChat().getUserName() + " (" + message.getChat().getId() + "): " + message.getText();
     }
 
     private String printQuery(CallbackQuery query) {
