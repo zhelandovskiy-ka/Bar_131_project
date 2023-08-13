@@ -60,6 +60,8 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
 
+        System.out.println(message.toString());
+
         if (message != null) {
 
             String text = message.getText();
@@ -67,12 +69,12 @@ public class Bot extends TelegramLongPollingBot {
             Logs.writeLog(printUserMessage(message));
 
             boolean registrationOk = Main.base.checkUsersRegistration(message.getChat().getId());
-
+            boolean isAdmin = id == Config.BOT_ID_MY;
 
             if (registrationOk) {
                 if (text.equals("/start")) {
 //                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getMainMenuKeyb(), false);
-                    sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom());
+                    sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom(isAdmin));
                     sendMes(id, getRandomSmile(), false);
                 }
 
@@ -87,114 +89,122 @@ public class Bot extends TelegramLongPollingBot {
                 if (text.equals("/stats") || text.equals("Статистика \uD83D\uDCC8")) {
                     CallbackResponses.getStats(message);
                 }
+
+                if (text.equals("Админ")) {
+                    CallbackResponses.getAdminMenu(message, false);
+                }
             } else
                 sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
                         , BotKeyboards.getAccessesKeyb(), false);
-        }
 
-        if (update.hasCallbackQuery()) {
-            CallbackQuery query = update.getCallbackQuery();
-            String queryData = query.getData();
+//            System.out.println(update.toString());
 
-            Logs.writeLog(printQuery(query));
+            if (update.hasCallbackQuery()) {
+                CallbackQuery query = update.getCallbackQuery();
+                String queryData = query.getData();
 
-            if (queryData.equals(BotKeyboards.CODE_MAIN_MENU)) {
-                CallbackResponses.getMainMenu(query.getMessage());
-            }
+                Logs.writeLog(printQuery(query));
 
-            if (queryData.equals(BotKeyboards.CODE_ACCESS)) {
-                CallbackResponses.checkRegistration(query.getMessage());
-            }
+                if (queryData.equals(BotKeyboards.CODE_MAIN_MENU)) {
+                    CallbackResponses.getMainMenu(query.getMessage());
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_ACCESS_YES)) {
-                CallbackResponses.confirmReg(queryData);
-            }
+                if (queryData.equals(BotKeyboards.CODE_ACCESS)) {
+                    CallbackResponses.checkRegistration(query.getMessage());
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_ACCESS_NO)) {
-                CallbackResponses.deniedAccess(queryData);
-            }
+                if (queryData.contains(BotKeyboards.CODE_ACCESS_YES)) {
+                    CallbackResponses.confirmReg(queryData);
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_MENU)) {
-                CallbackResponses.getMenuList(query.getMessage(), true);
-            }
+                if (queryData.contains(BotKeyboards.CODE_ACCESS_NO)) {
+                    CallbackResponses.deniedAccess(queryData);
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_COCKTAIL)) {
-                CallbackResponses.getMenuByItemList(query, "Меню коктейлей \uD83C\uDF78");
-            }
+                if (queryData.equals(BotKeyboards.CODE_MENU)) {
+                    CallbackResponses.getMenuList(query.getMessage(), true);
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_WINE)) {
-                CallbackResponses.getMenuByItemList(query, "Винное меню \uD83C\uDF77");
-            }
+                if (queryData.equals(BotKeyboards.CODE_COCKTAIL)) {
+                    CallbackResponses.getMenuByItemList(query, "Меню коктейлей \uD83C\uDF78");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_BEER)) {
-                CallbackResponses.getMenuByItemList(query, "Пивное меню \uD83C\uDF7A");
-            }
+                if (queryData.equals(BotKeyboards.CODE_WINE)) {
+                    CallbackResponses.getMenuByItemList(query, "Винное меню \uD83C\uDF77");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_WHISKY)) {
-                CallbackResponses.getMenuByItemList(query, "Виски \uD83E\uDD43");
-            }
+                if (queryData.equals(BotKeyboards.CODE_BEER)) {
+                    CallbackResponses.getMenuByItemList(query, "Пивное меню \uD83C\uDF7A");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_LIQUOR)) {
-                CallbackResponses.getMenuByItemList(query, "Ликер");
-            }
+                if (queryData.equals(BotKeyboards.CODE_WHISKY)) {
+                    CallbackResponses.getMenuByItemList(query, "Виски \uD83E\uDD43");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_ALC_FREE)) {
-                CallbackResponses.getMenuByItemList(query, "Безалкогольное \uD83E\uDDC3");
-            }
+                if (queryData.equals(BotKeyboards.CODE_LIQUOR)) {
+                    CallbackResponses.getMenuByItemList(query, "Ликер");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_VODKA)) {
-                CallbackResponses.getMenuByItemList(query, "Водка");
-            }
+                if (queryData.equals(BotKeyboards.CODE_ALC_FREE)) {
+                    CallbackResponses.getMenuByItemList(query, "Безалкогольное \uD83E\uDDC3");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_WERMUT)) {
-                CallbackResponses.getMenuByItemList(query, "Вермут");
-            }
+                if (queryData.equals(BotKeyboards.CODE_VODKA)) {
+                    CallbackResponses.getMenuByItemList(query, "Водка");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_BALM)) {
-                CallbackResponses.getMenuByItemList(query, "Бальзам");
-            }
+                if (queryData.equals(BotKeyboards.CODE_WERMUT)) {
+                    CallbackResponses.getMenuByItemList(query, "Вермут");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_GIN)) {
-                CallbackResponses.getMenuByItemList(query, "Джин");
-            }
+                if (queryData.equals(BotKeyboards.CODE_BALM)) {
+                    CallbackResponses.getMenuByItemList(query, "Бальзам");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_GIN)) {
-                CallbackResponses.getMenuByItemList(query, "Джин");
-            }
+                if (queryData.equals(BotKeyboards.CODE_GIN)) {
+                    CallbackResponses.getMenuByItemList(query, "Джин");
+                }
 
-            if (queryData.equals(BotKeyboards.CODE_RUM)) {
-                CallbackResponses.getMenuByItemList(query, "Ром");
-            }
+                if (queryData.equals(BotKeyboards.CODE_RUM)) {
+                    CallbackResponses.getMenuByItemList(query, "Ром");
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_ORDER_INFO)) {
-                boolean isAdmin = query.getMessage().getChatId() == Config.BOT_ID_MY;
-
-                CallbackResponses.getMenuOrderInfo(query, isAdmin);
-            }
+                if (queryData.contains(BotKeyboards.CODE_ORDER_INFO)) {
+                    CallbackResponses.getMenuOrderInfo(query, isAdmin);
+                }
 
 //            if (queryData.contains(BotKeyboards.CODE_ORDER_WH_INFO)) {
 //                CallbackResponses.getOrderInfo(query);
 //            }
 
-            if (queryData.equals(BotKeyboards.CODE_DEL_MES)) {
-                CallbackResponses.deleteMessage(query);
-            }
+                if (queryData.equals(BotKeyboards.CODE_DEL_MES)) {
+                    CallbackResponses.deleteMessage(query);
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_MAKE_ORDER)) {
-                CallbackResponses.makeOrder(query);
-            }
+                if (queryData.contains(BotKeyboards.CODE_MAKE_ORDER)) {
+                    CallbackResponses.makeOrder(query);
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_SOMEONE_ORDER)) {
-                CallbackResponses.makeSomeoneOrder(query);
-            }
+                if (queryData.contains(BotKeyboards.CODE_SOMEONE_ORDER)) {
+                    CallbackResponses.makeSomeoneOrder(query);
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_ORDER_YES)) {
-                CallbackResponses.acceptOrder(query);
-            }
+                if (queryData.contains(BotKeyboards.CODE_ORDER_YES)) {
+                    CallbackResponses.acceptOrder(query);
+                }
 
-            if (queryData.contains(BotKeyboards.CODE_ORDER_NO)) {
-                CallbackResponses.cancelOrder(query);
-            }
+                if (queryData.contains(BotKeyboards.CODE_ORDER_NO)) {
+                    CallbackResponses.cancelOrder(query);
+                }
+
+                if (queryData.contains(BotKeyboards.CODE_ADMIN_MENU)) {
+                    CallbackResponses.getAdminMenu(message, false);
+                }
+
+                if (queryData.contains(BotKeyboards.CODE_ADD_FUNDS)) {
+                    System.out.println("11111111111");
+                    CallbackResponses.addFundsToUser(query);
+                }
 
 /*            if (queryData.contains(BotKeyboards.CODE_BALANCE)) {
                 CallbackResponses.getBalance(query);
@@ -203,11 +213,12 @@ public class Bot extends TelegramLongPollingBot {
             if (queryData.contains(BotKeyboards.CODE_STATS)) {
                 CallbackResponses.getStats(query);
             }*/
+            }
         }
-
     }
 
     public void sendMesWithKeyb(long id, String text, InlineKeyboardMarkup ikm, boolean md) {
+        System.out.println(ikm.getKeyboard().size());
         SendMessage sm = new SendMessage()
                 .setChatId(id)
                 .setText(text)

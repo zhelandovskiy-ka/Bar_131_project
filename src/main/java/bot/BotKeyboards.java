@@ -44,6 +44,9 @@ public class BotKeyboards {
     public static final String CODE_PAY = "pay";
     public static final String CODE_ADD_BALANCE = "add_balance";
     public static final String CODE_DEL_MES = "delete_message";
+    public static final String CODE_ADD_FUNDS = "add_funds";
+    public static final String CODE_ADD_FUNDS_USER = "add_funds_user";
+    public static final String CODE_ADMIN_MENU = "admin_menu";
 
     public static InlineKeyboardMarkup getMainMenuKeyb() {
         String[] captions = new String[]{"Меню \uD83D\uDCDC", "Баланс \uD83D\uDCB8", "Моя статистика \uD83D\uDCC8"};
@@ -188,8 +191,16 @@ public class BotKeyboards {
         return generateKeyboard(captions, callbacks, typeButtons, 1, 1, null);
     }
 
+    public static InlineKeyboardMarkup getAdminKeyboard() {
+        String[] captions = new String[]{"Добавить средства"};
+        String[] callbacks = new String[]{CODE_ADD_FUNDS};
+        int[] typeButtons = new int[]{0};
 
-    public static InlineKeyboardMarkup getUsersListKeyb(String order) {
+        return generateKeyboard(captions, callbacks, typeButtons, 1, 1, null);
+    }
+
+
+    public static InlineKeyboardMarkup getUsersListKeyb(String option1, String option2, String backBtnCallBack) {
         List<User> users = Main.base.getUsersList();
 
         int size = users.size();
@@ -201,7 +212,7 @@ public class BotKeyboards {
         for (int i = 0; i < size; i++) {
             User user = users.get(i);
             captions[i] = user.getName();
-            callbacks[i] = CODE_ORDER_YES + "|" + user.getId() + ">" + order;
+            callbacks[i] = option1 + "|" + user.getId() + ">" + option2;
             typeButtons[i] = 0;
         }
 
@@ -215,7 +226,7 @@ public class BotKeyboards {
                 rowCount++;
         }
 
-        return generateKeyboard(captions, callbacks, typeButtons, rowCount, elementInRowCount, CODE_MENU);
+        return generateKeyboard(captions, callbacks, typeButtons, rowCount, elementInRowCount, backBtnCallBack);
     }
 
     public static InlineKeyboardMarkup getBackButtonKeyb(String backCode) {
@@ -226,11 +237,13 @@ public class BotKeyboards {
         return generateKeyboard(captions, callbacks, typeButtons, 1, 1, null);
     }
 
-    public static ReplyKeyboardMarkup getKeyboardBottom() {
+    public static ReplyKeyboardMarkup getKeyboardBottom(boolean isAdmin) {
         KeyboardRow kr1 = new KeyboardRow();
         kr1.add("Меню \uD83D\uDCDC");
         kr1.add("Баланс \uD83D\uDCB8");
         kr1.add("Статистика \uD83D\uDCC8");
+        if (isAdmin)
+            kr1.add("Админ");
 
         List<KeyboardRow> rowList = new ArrayList<>();
         rowList.add(kr1);

@@ -47,7 +47,6 @@ public class CallbackResponses {
         long id = queryMessage.getChatId();
         int messageId = queryMessage.getMessageId();
 
-//        Bot.getBotInstance().sendEditMesWithKeyb(id, queryMessage.getMessageId(), "\uD83D\uDD25Выберите раздел\uD83D\uDD25", BotKeyboards.getMenuKeyb());
         if (edit)
             Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, "Выберите раздел \uD83E\uDD14", BotKeyboards.getMenuKeyb());
         else
@@ -55,11 +54,33 @@ public class CallbackResponses {
 
     }
 
+    //todo добавил меню админа, сделать генерацию пользователей с коллбэком = /add_funds_username
+    //
+    public static void getAdminMenu(Message queryMessage, boolean edit) {
+        long id = queryMessage.getChatId();
+
+        Bot.getBotInstance().sendMesWithKeyb(id, "Меню администратора", BotKeyboards.getAdminKeyboard(), true);
+    }
+
+    public static void addFundsToUser(CallbackQuery query) {
+        String[] commands = getCommandsFromQuery(query.getData());
+        Long id = query.getMessage().getChat().getId();
+        int message_id = query.getMessage().getMessageId();
+
+        System.out.println(id);
+        System.out.println(message_id);
+
+        Bot.getBotInstance().sendEditMesWithKeyb(Config.BOT_ID_MY, message_id, "Выбери пользователя"
+                , BotKeyboards.getUsersListKeyb(BotKeyboards.CODE_ADD_FUNDS_USER, String.valueOf(id), BotKeyboards.CODE_ADMIN_MENU));
+    }
+
     //get available wines menu for user
     public static void getMenuByItemList(CallbackQuery query, String caption) {
         long id = query.getMessage().getChatId();
         int messageId = query.getMessage().getMessageId();
         String text = query.getData();
+
+        System.out.println(query.toString());
 
         Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, caption, BotKeyboards.getMenuByItemTypeKeyb(text));
     }
@@ -152,7 +173,7 @@ public class CallbackResponses {
 
 
         Bot.getBotInstance().sendMesWithKeyb(Config.BOT_ID_MY, "Выбери пользователя"
-                , BotKeyboards.getUsersListKeyb(orderName), false);
+                , BotKeyboards.getUsersListKeyb(BotKeyboards.CODE_ORDER_YES, orderName, BotKeyboards.CODE_MENU), false);
     }
 
     //accept order
