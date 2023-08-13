@@ -80,8 +80,6 @@ public class CallbackResponses {
         int messageId = query.getMessage().getMessageId();
         String text = query.getData();
 
-        System.out.println(query.toString());
-
         Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, caption, BotKeyboards.getMenuByItemTypeKeyb(text));
     }
 
