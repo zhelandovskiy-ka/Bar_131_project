@@ -10,6 +10,7 @@ public class MenuPosition {
     private String name;
     private String label;
     private String type;
+    private String subType;
     private String ruType;
     private String picSrc;
     private String recipe;
@@ -18,10 +19,12 @@ public class MenuPosition {
     private List<Component> componentList;
     private double cost;
 
-    public MenuPosition(String name, String label, String type, String ruType, String picSrc, String recipe, String composition, List<Component> componentList, String description) {
+    public MenuPosition(String name, String label, String type, String subType, String ruType, String picSrc
+            , String recipe, String composition, List<Component> componentList, String description) {
         this.name = name;
         this.label = label;
         this.type = type;
+        this.subType = subType;
         this.ruType = ruType;
         this.picSrc = picSrc;
         this.recipe = recipe;
@@ -144,5 +147,12 @@ public class MenuPosition {
 
     public String getRuType() {
         return ruType;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+    public String getSmailSubType() {
+        return SubTypes.getBySubtype(subType);
     }
 }

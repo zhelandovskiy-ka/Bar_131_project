@@ -13,7 +13,6 @@ public class Test {
         System.out.println(d);
     }
 
-
     public static InlineKeyboardMarkup generateKeyboard(String[] captions, String[] callbacks, int rowCount, int elementInRowCount, int[] typeButton) {
         int currentRow = 0;
         int currentElement = 0;

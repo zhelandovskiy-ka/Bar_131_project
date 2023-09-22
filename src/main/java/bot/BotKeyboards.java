@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 public class BotKeyboards {
-
     public static final String CODE_MAIN_MENU = "get_main_menu";
     public static final String CODE_ACCESS = "get_access";
     public static final String CODE_ACCESS_YES = "get_access_yes";
@@ -44,9 +43,11 @@ public class BotKeyboards {
     public static final String CODE_PAY = "pay";
     public static final String CODE_ADD_BALANCE = "add_balance";
     public static final String CODE_DEL_MES = "delete_message";
-    public static final String CODE_ADD_FUNDS = "add_funds";
-    public static final String CODE_ADD_FUNDS_USER = "add_funds_user";
+    public static final String CODE_ADMIN_ADD_FUNDS = "add_funds";
+    public static final String CODE_ADMIN_ADD_FUNDS_USER = "add_user_fundS";
     public static final String CODE_ADMIN_MENU = "admin_menu";
+    public static final String CODE_ADMIN_USERS_FOR_STATS = "code_admin_users_for_stats";
+    public static final String CODE_ADMIN_GET_STATS = "code_admin_get_stats";
 
     public static InlineKeyboardMarkup getMainMenuKeyb() {
         String[] captions = new String[]{"Меню \uD83D\uDCDC", "Баланс \uD83D\uDCB8", "Моя статистика \uD83D\uDCC8"};
@@ -80,25 +81,6 @@ public class BotKeyboards {
         return generateKeyboard(captions, callbacks, typeButtons, 2, 1, null);
     }
 
-/*    public static InlineKeyboardMarkup getCocktailMenuKeyb(String type) {
-        List<MenuPosition> menuPositionList = Main.bar.getAvailableMenuPositions(type);
-
-        int size = menuPositionList.size();
-
-        String[] captions = new String[size];
-        String[] callbacks = new String[size];
-        int[] typeButtons = new int[size];
-
-        for (int i = 0; i < size; i++) {
-            MenuPosition mp = menuPositionList.get(i);
-            captions[i] = mp.getLabel();
-            callbacks[i] = CODE_ORDER_INFO + "|" + mp.getName();
-            typeButtons[i] = 0;
-        }
-
-        return generateKeyboard(captions, callbacks, typeButtons, size, 1, CODE_MENU);
-    }*/
-
     public static InlineKeyboardMarkup getMenuByItemTypeKeyb(String type) {
         List<MenuPosition> menuPositionList = Main.bar.getAvailableMenuPositions(type);
 
@@ -110,7 +92,7 @@ public class BotKeyboards {
 
         for (int i = 0; i < size; i++) {
             MenuPosition mp = menuPositionList.get(i);
-            captions[i] = mp.getLabel();
+            captions[i] = mp.getSmailSubType() + " " + mp.getLabel() + " - " + mp.getCost() + "\u20BD";
             callbacks[i] = CODE_ORDER_INFO + "|" + mp.getName();
             typeButtons[i] = 0;
         }
@@ -126,7 +108,6 @@ public class BotKeyboards {
         }
 
         return generateKeyboard(captions, callbacks, typeButtons, rowCount, elementInRowCount, CODE_MENU);
-//        return generateKeyboard(captions, callbacks, typeButtons, 8, 2, CODE_MENU);
     }
 
     public static InlineKeyboardMarkup getMenuKeyb() {
@@ -146,7 +127,6 @@ public class BotKeyboards {
         String[] callbacks = new String[callbacksList.size()];
         callbacksList.toArray(callbacks);
 
-//        String[] callbacks = new String[]{CODE_COCKTAIL, CODE_WHISKY, CODE_WINE, CODE_BEER, CODE_LIQUOR, CODE_ALC_FREE};
         int[] typeButtons = new int[captionsList.size()];
         for (int i = 0; i < typeButtons.length; i++) {
             typeButtons[i] = 0;
@@ -192,13 +172,12 @@ public class BotKeyboards {
     }
 
     public static InlineKeyboardMarkup getAdminKeyboard() {
-        String[] captions = new String[]{"Добавить средства"};
-        String[] callbacks = new String[]{CODE_ADD_FUNDS};
-        int[] typeButtons = new int[]{0};
+        String[] captions = new String[]{"Добавить средства", "Статистика"};
+        String[] callbacks = new String[]{CODE_ADMIN_ADD_FUNDS, CODE_ADMIN_USERS_FOR_STATS};
+        int[] typeButtons = new int[]{0, 0};
 
-        return generateKeyboard(captions, callbacks, typeButtons, 1, 1, null);
+        return generateKeyboard(captions, callbacks, typeButtons, 2, 1, null);
     }
-
 
     public static InlineKeyboardMarkup getUsersListKeyb(String option1, String option2, String backBtnCallBack) {
         List<User> users = Main.base.getUsersList();
@@ -301,11 +280,5 @@ public class BotKeyboards {
 
         return null;
     }
-
-/*    private static List<InlineKeyboardButton> getBackToMainMenuButton() {
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        row.add(new InlineKeyboardButton("Назад").setCallbackData(CODE_MAIN_MENU));
-        return row;
-    }*/
 }
 

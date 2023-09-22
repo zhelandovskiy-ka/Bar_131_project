@@ -54,24 +54,28 @@ public class CallbackResponses {
 
     }
 
-    //todo добавил меню админа, сделать генерацию пользователей с коллбэком = /add_funds_username
-    //
     public static void getAdminMenu(Message queryMessage, boolean edit) {
         long id = queryMessage.getChatId();
+        int messageId = queryMessage.getMessageId();
 
-        Bot.getBotInstance().sendMesWithKeyb(id, "Меню администратора", BotKeyboards.getAdminKeyboard(), true);
+        if (edit)
+            Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, "Меню администратора", BotKeyboards.getAdminKeyboard());
+        else
+            Bot.getBotInstance().sendMesWithKeyb(id, "Меню администратора", BotKeyboards.getAdminKeyboard(), true);
+    }
+
+    public static void getStatsForUser(CallbackQuery query) {
+        int message_id = query.getMessage().getMessageId();
+
+        Bot.getBotInstance().sendEditMesWithKeyb(Config.BOT_ID_MY, message_id, "Выбери пользователя"
+                , BotKeyboards.getUsersListKeyb(BotKeyboards.CODE_ADMIN_GET_STATS, "", BotKeyboards.CODE_ADMIN_MENU));
     }
 
     public static void addFundsToUser(CallbackQuery query) {
-        String[] commands = getCommandsFromQuery(query.getData());
-        Long id = query.getMessage().getChat().getId();
         int message_id = query.getMessage().getMessageId();
 
-        System.out.println(id);
-        System.out.println(message_id);
-
         Bot.getBotInstance().sendEditMesWithKeyb(Config.BOT_ID_MY, message_id, "Выбери пользователя"
-                , BotKeyboards.getUsersListKeyb(BotKeyboards.CODE_ADD_FUNDS_USER, String.valueOf(id), BotKeyboards.CODE_ADMIN_MENU));
+                , BotKeyboards.getUsersListKeyb(BotKeyboards.CODE_ADMIN_ADD_FUNDS_USER, "", BotKeyboards.CODE_ADMIN_MENU));
     }
 
     //get available wines menu for user
@@ -101,32 +105,12 @@ public class CallbackResponses {
         MenuPosition menuPosition = Main.bar.getMenuPositionByName(orderName);
 
         Bot.getBotInstance().sendPhotoWithKeyb(id
-                , Utilits.makeBold(menuPosition.getLabel())
-                        + "\n\n"
-                        + Utilits.makeItalic(menuPosition.getComposition())
-                        + "\n\n"
-                        + Utilits.makeItalic(menuPosition.getDescription())
-                        + "\n\n"
+                , Utilits.makeBold(menuPosition.getLabel()+ "\n\n")
+                        + Utilits.makeItalic(menuPosition.getComposition() + "\n\n")
+                        + Utilits.makeItalic(menuPosition.getDescription() + "\n\n")
                         + "Цена: " + menuPosition.getCost() + "\u20BD"
                 , menuPosition.getPicSrc(), BotKeyboards.getOrderInfoKeyb(orderName, isAdmin));
     }
-
-/*    //get order info
-    public static void getOrderInfo(CallbackQuery query) {
-        String[] commands = getCommandsFromQuery(query.getData());
-        String orderName = commands[0];
-        long id = query.getMessage().getChatId();
-
-        WarehousePosition warehousePosition = Main.bar.getWarehousePositionByName(orderName);
-
-        Bot.getBotInstance().sendMesWithKeyb(id
-                , Utilits.makeBold(warehousePosition.getLabel())
-                        + "\n\n"
-                        + Utilits.makeItalic(warehousePosition.getDescription())
-                        + "\n\n"
-                        + "Цена: " + warehousePosition.getCost() + "\u20BD"
-                , BotKeyboards.getOrderInfoKeyb(orderName), true);
-    }*/
 
     //delete last message
     public static void deleteMessage(CallbackQuery query) {
@@ -151,11 +135,11 @@ public class CallbackResponses {
                         + "\n\n"
                         + menuPosition.getLabel()
                         + "\n\n"
-                        + menuPosition.getComposition()
+                        + "Состав: " + menuPosition.getComposition()
                         + "\n\n"
 //                        + menuPosition.getComponentListToString()
 //                        + "\n\n"
-                        + menuPosition.getRecipe()
+                        + "Рецепт:\n" + menuPosition.getRecipe()
                         + "\n\n"
                         + menuPosition.getCost() + "\u20BD"
                 , BotKeyboards.getOrderKeyb(id, orderName), false);
@@ -178,23 +162,28 @@ public class CallbackResponses {
     public static void acceptOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
 
-        String label = Base.getInstance("bar.db").getLabelByName(commands[1]);
-        System.out.println("label is " + label);
+        long id = Long.parseLong(commands[0]);
+        String label = Base.getInstance().getLabelByName(commands[1]);
 
-        Main.base.updateUserData(commands);
-        Main.base.addToHistory(commands);
+        if (Main.bar.inStock(commands[1])) {
+            Main.base.updateUserData(commands);
+            Main.base.addToHistory(commands);
+            Main.base.updateWarehouseData(commands);
 
-        Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ \"" + label + "\" выполнен ✅", false);
-        Bot.getBotInstance().sendMes(Config.BOT_ID_MY, "Заказ \"" + label + "\" выполнен для @" + Main.base.getUserNameById(commands[0]), false);
+            Bot.getBotInstance().sendMes(id, "Заказ \"" + label + "\" выполнен ✅", false);
+            Bot.getBotInstance().sendMes(Config.BOT_ID_MY, "Заказ \"" + label + "\" выполнен для @" + Main.base.getUserNameById(commands[0]), false);
 
-        deleteMessage(query);
+            deleteMessage(query);
+        } else {
+            Bot.getBotInstance().sendMes(id, "Заказ \"" + label + "\" не выполнен ❌. Недостаточно ингредиентов.", false);
+        }
     }
 
     //cancel order
     public static void cancelOrder(CallbackQuery query) {
         String[] commands = getCommandsFromQuery(query.getData());
 
-        String label = Base.getInstance("bar.db").getLabelByName(commands[1]);
+        String label = Base.getInstance().getLabelByName(commands[1]);
         System.out.println("label is " + label);
 
         Bot.getBotInstance().sendMes(Long.parseLong(commands[0]), "Заказ \"" + label + "\" отменен ❌", false);
@@ -208,29 +197,29 @@ public class CallbackResponses {
 
         User user = Main.base.getUserData(String.valueOf(id));
 
-//        Bot.getBotInstance().sendEditMesWithKeyb(id, messageId, name + ", ваш баланс составляет:\n\n" + user.getBalance() + "\u20BD", BotKeyboards.getPayKeyb());
-        Bot.getBotInstance().sendMesWithKeyb(id, name + ", ваш баланс составляет:\n\n" + Utilits.makeBold(String.valueOf(user.getBalance())) + "\u20BD", BotKeyboards.getPayKeyb(), true);
+        Bot.getBotInstance().sendMesWithKeyb(id, name + ", ваш баланс составляет:\n\n" + Utilits.makeBold(user.getBalance() + "\u20BD")
+                , BotKeyboards.getPayKeyb(), true);
     }
 
     //get user stats
-    public static void getStats(Message message) {
-        long id = message.getChatId();
-//        int messageId = message.getMessageId();
-
+    public static void sendStats(long id, long sendId) {
         User user = Main.base.getUserData(String.valueOf(id));
 
-        Bot.getBotInstance().sendMes(id,
-                Utilits.makeBold("Статистика:\n")
-                        + "\nКоличество заказов: " + Utilits.makeBold(String.valueOf(user.getCountOrders()))
-                        + "\nВсего выпито (мл): " + Utilits.makeBold(String.valueOf(user.getTotalDrunk()))
-                        + "\nВсего потрачено: " + Utilits.makeBold(String.valueOf(user.getTotalLost()))
-                        + "\nВсего выплачено: " + Utilits.makeBold(String.valueOf(user.getTotalPayed()))
-//                , BotKeyboards.getBackButtonKeyb(BotKeyboards.CODE_MAIN_MENU)
+        Bot.getBotInstance().sendMes(sendId,
+                Utilits.makeBold("Статистика за месяц:\n")
+                        + "\nКоличество заказов: " + Utilits.makeBold(user.getCountOrdersMonth())
+                        + "\nВсего выпито (л): " + Utilits.makeBold(user.getSumValueMonth())
+                        + "\nВсего потрачено: " + Utilits.makeBold(user.getSumMonth())
+                        + "\nЛюбимый заказ: " + Utilits.makeBold(user.getFavoriteOrderMonth())
+                        + Utilits.makeBold("\n\n\nОбщая статистика: ")
+                        + "\n\nКоличество заказов: " + Utilits.makeBold(String.valueOf(user.getCountOrders()))
+                        + "\nВсего выпито (л): " + Utilits.makeBold(String.valueOf(user.getTotalDrunkLiters()))
+                        + "\nВсего потрачено: " + Utilits.makeBold(user.getTotalLost() + "\u20BD")
+                        + "\nВсего выплачено: " + Utilits.makeBold(user.getTotalPayed() + "\u20BD")
+                        + "\nЛюбимый заказ: " + Utilits.makeBold(user.getFavoriteOrder())
                 , true);
     }
 
-    //splitting the request into commands.
-    //template: query|command_1>command_2<command_3
     public static String[] getCommandsFromQuery(String queryData) {
         String[] commands = new String[5];
 

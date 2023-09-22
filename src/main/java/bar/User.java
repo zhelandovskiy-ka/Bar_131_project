@@ -1,5 +1,10 @@
 package bar;
 
+import db.Base;
+import units.Utilits;
+
+import java.util.Date;
+
 public class User {
     private String id;
     private String name;
@@ -8,13 +13,16 @@ public class User {
     private double totalDrunk;
     private double totalLost;
     private int countOrders;
+    private Date lastPay;
+    private Date lastLogin;
+    private Date lastNotification;
 
     public User(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public User(String id, String name, double balance, double totalPayed, double totalDrunk, double totalLost, int countOrders) {
+    public User(String id, String name, double balance, double totalPayed, double totalDrunk, double totalLost, int countOrders, Date lastPay, Date lastLogin, Date lastNotification) {
         this.id = id;
         this.name = name;
         this.balance = balance;
@@ -22,6 +30,9 @@ public class User {
         this.totalDrunk = totalDrunk;
         this.totalLost = totalLost;
         this.countOrders = countOrders;
+        this.lastPay = lastPay;
+        this.lastLogin = lastLogin;
+        this.lastNotification = lastNotification;
     }
 
     @Override
@@ -34,6 +45,23 @@ public class User {
                 ", totalDrunk=" + totalDrunk +
                 ", countOrders=" + countOrders +
                 '}';
+    }
+
+    public String getCountOrdersMonth() {
+        return Base.getInstance().getCountOrdersMonth(id);
+    }
+    public String getSumValueMonth() {
+        return String.valueOf(Utilits.roundDouble(Base.getInstance().getSumValueMonth(id) / 1000, 2));
+    }
+    public String getFavoriteOrderMonth() {
+        return Base.getInstance().getFavoriteOrderMonth(id);
+    }
+    public String getFavoriteOrder() {
+        return Base.getInstance().getFavoriteOrder(id);
+    }
+
+    public String getSumMonth() {
+        return Base.getInstance().getSumMonth(id);
     }
 
     public String getId() {
@@ -72,6 +100,10 @@ public class User {
         return totalDrunk;
     }
 
+    public double getTotalDrunkLiters() {
+        return Utilits.roundDouble(totalDrunk/ 1000, 2);
+    }
+
     public void setTotalDrunk(double totalDrunk) {
         this.totalDrunk = totalDrunk;
     }
@@ -90,5 +122,29 @@ public class User {
 
     public void setTotalLost(double totalLost) {
         this.totalLost = totalLost;
+    }
+
+    public Date getLastPay() {
+        return lastPay;
+    }
+
+    public void setLastPay(Date lastPay) {
+        this.lastPay = lastPay;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public Date getLastNotification() {
+        return lastNotification;
+    }
+
+    public void setLastNotification(Date lastNotification) {
+        this.lastNotification = lastNotification;
     }
 }

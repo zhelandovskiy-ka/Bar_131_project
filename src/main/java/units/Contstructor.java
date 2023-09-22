@@ -50,11 +50,6 @@ public class Contstructor {
         listTypes.addItem("wine");
         listTypes.addItem("wermut");
 
-        // [
-        // {"name":"whisky_jb","value":50}
-        // ,{"name":"free_cola","value":150}
-        // ]
-
         buttonAdd.addActionListener(e -> {
             String text = textAreaComponents.getText();
             int size = text.length();
@@ -86,7 +81,7 @@ public class Contstructor {
             String pic = "pics/" + name + ".png";
             String components = textAreaComponents.getText();
 
-            String text = String.format("INSERT INTO menu VALUES ('%s', '%s', '%s', '%s', '%s', '', '', '');", name, type, label, pic, components);
+            String text = String.format("INSERT INTO menu VALUES ('%s', '%s', '', '%s', '%s', '%s', '', '', '');", name, type, label, pic, components);
             textAreaComposition.setText(text);
             Main.base.addMenuPosition(text);
             textAreaComponents.setText("");

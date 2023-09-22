@@ -5,20 +5,22 @@ public class WarehousePosition {
     private String label;
     private String description;
     private int count;
-    private int value;
+    private double value;
     private double cost;
+    private double stock;
 
     public WarehousePosition(double cost) {
         this.cost = cost;
     }
 
-    public WarehousePosition(String name, String label, String description, int count, int value, double cost) {
+    public WarehousePosition(String name, String label, String description, int count, double value, double cost, double stock) {
         this.name = name;
         this.label = label;
         this.description = description;
         this.count = count;
         this.value = value;
         this.cost = cost;
+        this.stock = stock;
     }
 
     @Override
@@ -49,14 +51,6 @@ public class WarehousePosition {
         this.label = label;
     }
 
-//    public String getType() {
-//        return type;
-//    }
-
-//    public void setType(String type) {
-//        this.type = type;
-//    }
-
     public int getCount() {
         return count;
     }
@@ -65,11 +59,11 @@ public class WarehousePosition {
         this.count = count;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
@@ -87,5 +81,13 @@ public class WarehousePosition {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getStock() {
+        return stock;
+    }
+
+    public void setStock(double stock) {
+        this.stock = stock;
     }
 }

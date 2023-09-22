@@ -1,5 +1,6 @@
 package bar;
 
+import db.Base;
 import units.Main;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Bar {
                 for (Component component : menuPosition.getComponentList()) {
                     for (WarehousePosition warehousePosition : warehousePositions) {
                         if (warehousePosition.getName().contains(component.getName())
-                                && (warehousePosition.getValue() * warehousePosition.getCount()) >= component.getValue()) {
+                                && (warehousePosition.getStock() * warehousePosition.getCount()) >= component.getValue()) {
                             countInStock++;
                             break;
                         }
@@ -49,15 +50,16 @@ public class Bar {
             for (Component component : menuPosition.getComponentList()) {
                 for (WarehousePosition warehousePosition : warehousePositions) {
                     if (warehousePosition.getName().contains(component.getName())
-                            && (warehousePosition.getValue() * warehousePosition.getCount()) >= component.getValue()) {
+                            && (warehousePosition.getStock() * warehousePosition.getCount()) >= component.getValue()) {
                         countInStock++;
                         break;
                     }
                 }
             }
 
-            if (countInStock == menuPosition.getComponentList().size())
+            if (countInStock == menuPosition.getComponentList().size()) {
                 menuPositions.add(menuPosition);
+            }
         }
 
         return menuPositions;
@@ -76,23 +78,19 @@ public class Bar {
 
         for (WarehousePosition position : this.warehousePositions) {
             System.out.println(position.getName() + " = " + name + " " + position.getValue());
-            if (position.getName().contains(name) && position.getValue() > 0)
+            if (position.getName().contains(name) && position.getStock() > 0)
                 warehousePositions.add(position);
-        }
-
-        for (WarehousePosition warehousePosition : warehousePositions) {
-            System.out.println(warehousePosition.toString());
         }
 
         return warehousePositions;
     }
 
     public void refreshMenuPositions() {
-        menuPositions = Main.base.getMenuPositions();
+        menuPositions = Base.getInstance().getMenuPositions();
     }
 
     public void refreshWarehousePosition() {
-        warehousePositions = Main.base.getWarehousePositions();
+        warehousePositions = Base.getInstance().getWarehousePositions();
     }
 
     public double getCostByComponents(List<Component> components) {
@@ -107,7 +105,7 @@ public class Bar {
             WarehousePosition lowCostPosition = new WarehousePosition(999999);
 
             for (WarehousePosition position : warehousePositions) {
-                if (position.getName().contains(component.getName()) && position.getValue() >= component.getValue()) {
+                if (position.getName().contains(component.getName()) && position.getStock() >= component.getValue()) {
                     if (position.getCost() < lowCostPosition.getCost())
                         lowCostPosition = position;
                 }
@@ -143,12 +141,29 @@ public class Bar {
         return null;
     }
 
-    public WarehousePosition getWarehousePositionByName(String name) {
+    public WarehousePosition getWarehousePositionLowByName(Component component) {
+        refreshWarehousePosition();
+
+        WarehousePosition lowCostPosition = new WarehousePosition(999999);
+
         for (WarehousePosition warehousePosition : warehousePositions) {
-            if (warehousePosition.getName().equals(name))
-                return warehousePosition;
+            if (warehousePosition.getName().contains(component.getName()) && (warehousePosition.getStock() * warehousePosition.getCount()) >= component.getValue())
+                if (warehousePosition.getCost() < lowCostPosition.getCost())
+                    lowCostPosition = warehousePosition;
         }
 
-        return null;
+        return lowCostPosition;
+    }
+
+    public boolean inStock(String name) {
+        MenuPosition mp = getMenuPositionByName(name);
+
+        for (Component component : mp.getComponentList()) {
+            WarehousePosition wp = getWarehousePositionLowByName(component);
+            if (wp.getStock() < component.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

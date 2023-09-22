@@ -60,8 +60,6 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
 
-        System.out.println(message.toString());
-
         if (message != null) {
 
             String text = message.getText();
@@ -73,7 +71,6 @@ public class Bot extends TelegramLongPollingBot {
 
             if (registrationOk) {
                 if (text.equals("/start")) {
-//                    sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getMainMenuKeyb(), false);
                     sendReplyKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!", BotKeyboards.getKeyboardBottom(isAdmin));
                     sendMes(id, getRandomSmile(), false);
                 }
@@ -87,22 +84,36 @@ public class Bot extends TelegramLongPollingBot {
                 }
 
                 if (text.equals("/stats") || text.equals("Статистика \uD83D\uDCC8")) {
-                    CallbackResponses.getStats(message);
+                    CallbackResponses.sendStats(message.getChatId(), message.getChatId());
                 }
 
-                if (text.equals("Админ")) {
-                    CallbackResponses.getAdminMenu(message, false);
+                if (isAdmin) {
+                    if (text.equals("Админ")) {
+                        CallbackResponses.getAdminMenu(message, false);
+                    }
+
+                    if (text.contains("/add_user_fundS")) {
+                        int pos1 = text.indexOf('S');
+                        int pos2 = text.lastIndexOf('_');
+
+                        String user_id = text.substring(pos1 + 2, pos2);
+                        String sum = text.substring(pos2 + 1);
+
+                        double newBalance = Main.base.updateUserBalance(user_id, sum);
+
+                        sendMes(Long.parseLong(user_id), "Баланс пополнен на " + sum + "₽ \uD83D\uDCB8\n\n" +
+                                Utilits.makeBold("Текущий баланс: " + newBalance + "₽"), true);
+                    }
                 }
             } else
-                sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
+                sendMesWithKeyb(id, "Приветствую, " + message.getChat().getFirstName() + "!\n\nВидимо ты здесь впервые? Чтобы запросить доступ нажми кнопку ниже ⬇️"
                         , BotKeyboards.getAccessesKeyb(), false);
         }
-        System.out.println(update.toString());
 
         if (update.hasCallbackQuery()) {
             CallbackQuery query = update.getCallbackQuery();
             String queryData = query.getData();
-            long id = update.getMessage().getChatId();
+            long id = query.getMessage().getChatId();
             boolean isAdmin = id == Config.BOT_ID_MY;
 
             Logs.writeLog(printQuery(query));
@@ -200,24 +211,34 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             if (queryData.contains(BotKeyboards.CODE_ADMIN_MENU)) {
-                CallbackResponses.getAdminMenu(message, false);
+                CallbackResponses.getAdminMenu(query.getMessage(), true);
             }
 
-            if (queryData.contains(BotKeyboards.CODE_ADD_FUNDS)) {
-                System.out.println("11111111111");
+            if (queryData.contains(BotKeyboards.CODE_ADMIN_ADD_FUNDS)) {
                 CallbackResponses.addFundsToUser(query);
             }
 
-/*            if (queryData.contains(BotKeyboards.CODE_BALANCE)) {
-                CallbackResponses.getBalance(query);
+            if (queryData.contains(BotKeyboards.CODE_ADMIN_USERS_FOR_STATS)) {
+                CallbackResponses.getStatsForUser(query);
             }
 
-            if (queryData.contains(BotKeyboards.CODE_STATS)) {
-                CallbackResponses.getStats(query);
-            }*/
+            if (queryData.contains(BotKeyboards.CODE_ADMIN_ADD_FUNDS_USER)) {
+                queryData = queryData.replace('|', '_');
+                queryData = queryData.replace('>', '_');
+                String text = "/" + queryData;
+                sendMes(id, text, false);
+            }
+
+            if (queryData.contains(BotKeyboards.CODE_ADMIN_GET_STATS)) {
+                int pos = queryData.indexOf('|');
+                long idUser = Long.parseLong(queryData.substring(pos + 1, queryData.length() - 1));
+                System.out.println(id);
+                String text = "/" + queryData;
+               CallbackResponses.sendStats(idUser, Config.BOT_ID_MY);
+
+            }
         }
     }
-
 
     public void sendMesWithKeyb(long id, String text, InlineKeyboardMarkup ikm, boolean md) {
         SendMessage sm = new SendMessage()
@@ -250,11 +271,7 @@ public class Bot extends TelegramLongPollingBot {
         delay();
     }
 
-    //[{"name":"whisky_jb","value":30},{"name":"liquor_jager","value":30},{"name":"liquor_aperol","value":30},{"name":"juice_lemon","value":30}]
     public void sendPhotoWithKeyb(long id, String text, String photoUrl, InlineKeyboardMarkup ikm) {
-//        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        ///Users/cryteur_dev/Yandex.Disk.localized/java_project/Bar_131_project/pics/whiskey-cola.jpeg
-        ///Users/cryteur_dev/Yandex.Disk.localized/java_project/Bar_131_project
         SendPhoto photo = new SendPhoto()
                 .setChatId(id)
                 .setCaption(text)
@@ -284,6 +301,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public int sendMes(long id, String text, boolean md) {
+//        System.out.println(text);
         Message message = new Message();
 
         SendMessage sm = new SendMessage()
