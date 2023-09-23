@@ -7,25 +7,33 @@ __131 Bar Project__
 Несколько скриншотов интерфейса бота
 
 Экран приветствия:
-![Экран приветствия](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/1_start.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/1_start.jpg"  width="40%">
 
 Меню бота:
-![Меню бота](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/1_menu.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/1_menu.jpg"  width="40%">
 
 Меню бара:
-![Меню бара](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/2_menu.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/2_menu.jpg"  width="40%">
 
 Меню коктейлей:
-![Меню коктейлей](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/3_menu.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/3_menu.jpg"  width="40%">
 
 Пример картточки заказа:
-![Карточка заказа](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/4_order.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/4_order.jpg"  width="40%">
 
 Статистика пользователя:
-![Статистика](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/5_statistics.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/5_statistics.jpg"  width="40%">
 
 Баланс пользователя:
-![Баланс](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/6_balance.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/6_balance.jpg"  width="40%">
 
 Меню администратора:
-![Меню администратора](https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/7_admin.jpg)
+
+<img src="https://github.com/zhelandovskiy-ka/Bar_131_project/blob/master/screens/7_admin.jpg"  width="40%">
