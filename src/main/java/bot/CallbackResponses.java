@@ -192,12 +192,14 @@ public class CallbackResponses {
     //get user balance
     public static void getBalance(Message message) {
         long id = message.getChatId();
-//        int messageId = message.getMessageId();
         String name = message.getChat().getFirstName();
 
         User user = Main.base.getUserData(String.valueOf(id));
 
-        Bot.getBotInstance().sendMesWithKeyb(id, name + ", ваш баланс составляет:\n\n" + Utilits.makeBold(user.getBalance() + "\u20BD")
+        Bot.getBotInstance().sendMesWithKeyb(id,
+                Utilits.makeBold(name) +
+                        ", ваш баланс составляет:\n\n"
+                        + Utilits.makeBold(user.getBalance() + "\u20BD")
                 , BotKeyboards.getPayKeyb(), true);
     }
 
